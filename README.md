@@ -1,4 +1,4 @@
-# DailyChallenge-2026-LeetCode
+# LeetCode-2026
 
 A curated set of LeetCode solutions and daily practice notes for 2026. Each
 solution lives at the repository root and follows the standard LeetCode C++
