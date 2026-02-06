@@ -1,9 +1,8 @@
 class Solution {
 public:
     int longestConsecutive(vector<int>& a) {
-        map<long long, long long> mp;
+        map<long long, long long> mp; // dp!!
         int n = a.size();
-
         sort(a.begin(), a.end());
         long long ans = 0;
 
