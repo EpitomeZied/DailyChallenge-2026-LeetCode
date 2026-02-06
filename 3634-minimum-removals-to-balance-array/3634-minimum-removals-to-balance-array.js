@@ -5,29 +5,20 @@
  */
 var minRemoval = function (nums, k) {
     const n = nums.length;
-    const arr = nums.map(BigInt);
-    const K = BigInt(k);
+  const arr = nums.map(BigInt);
+  const K = BigInt(k);
 
-    arr.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  arr.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
 
-    function upperBound(target, lo, hi) {
-        if (lo >= hi) return lo;
-        const mid = lo + ((hi - lo) >> 1);
+  let best = 1;
+  let l = 0;
 
-        if (arr[mid] <= target) {
-            return upperBound(target, mid + 1, hi);
-        } else {
-            return upperBound(target, lo, mid);
-        }
+  for (let r = 0; r < n; r++) {
+    while (arr[r] > arr[l] * K) {
+      l++;
     }
+    best = Math.max(best, r - l + 1);
+  }
 
-    let best = 1;
-
-    for (let i = 0; i < n; i++) {
-        const target = arr[i] * K;
-        const r = upperBound(target, i, n);
-        const len = r - i;
-        if (len > best) best = len;
-    }
-    return n - best;
+  return n - best;
 };
