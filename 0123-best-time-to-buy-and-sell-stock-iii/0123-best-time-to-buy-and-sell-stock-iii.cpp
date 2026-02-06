@@ -1,25 +1,35 @@
 class Solution {
 public:
-    int maxProfit(vector<int> &prices) {
-        int n = prices.size();
-        vector<int> pref(n), suff(n);
+    int n;
+    vector<int> p;
+    vector<vector<vector<int>>> memo;
+    vector<vector<vector<char>>> vis;
 
-        int mn = prices[0];
-        for (int i = 1; i < n; i++) {
-            mn = min(mn, prices[i]);
-            pref[i] = max(pref[i - 1], prices[i] - mn);
+    int dfs(int i, int holding, int k) {
+        if (i == n) return 0;
+        if (k == 0) return 0;
+
+        if (vis[i][holding][k]) return memo[i][holding][k];
+        vis[i][holding][k] = 1;
+
+        int best = dfs(i + 1, holding, k); // skip
+
+        if (holding == 0) {
+            // buy
+            best = max(best, -p[i] + dfs(i + 1, 1, k));
+        } else {
+            // sell
+            best = max(best, p[i] + dfs(i + 1, 0, k - 1));
         }
 
-        int mx = prices[n - 1];
-        for (int i = n - 2; i >= 0; i--) {
-            mx = max(mx, prices[i]);
-            suff[i] = max(suff[i + 1], mx - prices[i]); // max profit at idx i
-        }
+        return memo[i][holding][k] = best;
+    }
 
-        int ans = 0;
-        for (int i = 0; i < n; i++) {
-            ans = max(ans, pref[i] + suff[i]);
-        }
-        return ans;
+    int maxProfit(vector<int>& prices) {
+        p = prices;
+        n = (int)p.size();
+        memo.assign(n, vector<vector<int>>(2, vector<int>(3, 0)));
+        vis.assign(n, vector<vector<char>>(2, vector<char>(3, 0)));
+        return dfs(0, 0, 2);
     }
 };
