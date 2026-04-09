@@ -1,42 +1,31 @@
 class Solution {
+private:
+    vector<string> ans;
+    string s;
+
+    void build(int open_rem, int open_cnt) {
+        if (open_cnt < 0)
+            return;
+        if (open_rem == 0) {
+            for (int i = open_cnt; i > 0; i--)
+                s += ')';
+            ans.push_back(s);
+            for (int i = open_cnt; i > 0; i--)
+                s.pop_back();
+
+            return;
+        }
+        s += '(';
+        build(open_rem - 1, open_cnt + 1); // open
+        s.pop_back();
+        s += ")";
+        build(open_rem, open_cnt - 1); // close
+        s.pop_back();
+    }
 
 public:
     vector<string> generateParenthesis(int n) {
-        n = 2 * n;
-        vector<string> ans;
-
-        function<bool(string)> valid = [](string ss) {
-            stack<char> st;
-            for (char c : ss) {
-                if (c == '(')
-                    st.push(c);
-                else {
-                    if (st.empty())
-                        return false;
-                    st.pop();
-                }
-            }
-            return st.empty();
-        };
-
-        string s;
-        function<void(int)> rec = [&](int i) {
-            if (i == n) {
-                if (valid(s))
-                    ans.push_back(s);
-                // cout << s << endl;
-                return;
-            }
-            // close bracket
-            s.push_back(')');
-            rec(i + 1);
-            s.pop_back();
-            // open bracket
-            s.push_back('(');
-            rec(i + 1);
-            s.pop_back();
-        };
-        rec(0);
+        build(n, 0);
         return ans;
     }
 };
